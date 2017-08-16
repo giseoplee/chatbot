@@ -25,7 +25,8 @@ RoutesService.Init = function(){
     });
 
     app.get('/', (req, res, callback) => {
-	var result = "result";
+      
+	      var result = "result";
         res.status(200).json({ "result" : result });
     });
 

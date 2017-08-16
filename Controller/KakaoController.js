@@ -1,6 +1,8 @@
 var util = require('util');
 var express = require('express');
 
+var conversationService = require('../Service/ConversationService2.js');
+
 var router = express.Router();
 
 router.use(function log(req, res, next) {
@@ -19,7 +21,9 @@ router.get('/keyboard', function(req, res, callback){
 
 router.post('/message', function(req, res, callback){
 
+    console.log(req.body);
     console.log("in keyboard url");
+
     res.json(
         {
           "message" : { "text" : "밥 뭐묵지" }
