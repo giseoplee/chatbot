@@ -7,7 +7,7 @@
     "start_pro": "set NODE_ENV=production && node Main.js"
   },
   "dependencies": {
-    "async": "^2.4.1",
+    "async": "^2.5.0",
     "body-parser": "~1.15.2",
     "compression": "^1.6.2",
     "connect-redis": "^3.3.0",

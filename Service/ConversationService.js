@@ -10,82 +10,44 @@ var ConversationService = function(){};
 ConversationService.Init = function(){
 
       global.conversation = new Conversation(config.conversationConfig.conversation);
-
-      //onsole.log(redis.redis.set("key" , "value"));
-      //console.log(redis);
-      // redis.redis.set("key", "value");
-      // redis.redis.get("key", (err, result) => { console.log(result); });
-
-      redis.redis.set("key", "value");
-      ConversationService.SendMessage("key", "text", "hello");
 }
 
-// var sendMessage = new Promise((resolve, reject) =>
-//     conversation.message(payload, function(err, data) {
-//       if (err) {
-//         reject(err);
-//       }else{
-//         resolve(data);
-//       }
-//     })
-// );
+ConversationService.GetConversationResponse = (userKey, messageType, messageContent, callback) => {
 
-ConversationService.SendMessage = (useKey, messageType, messageContent) => {
-
-    let key = useKey;
+    let key = userKey;
     let type = messageType;
     let content = { 'text' : messageContent };
-
-    // let payload = {
-    //
-    //   workspace_id : config.conversationConfig.workspace_id,
-    // }
-
-    //console.log(redis.redis.get(key, (error, result) => { console.log(result); }));
+    let context = {};
+    let result;
 
     redis.redis.get(key).then((result) => {
 
-        ConversationService.getConversationResponse({}, content);
-    });
-}
+          if(result != null){
 
-ConversationService.getConversationResponse = function(context, message){
+              context = JSON.parse(result);
+          }
 
-    let payload = {
+          let payload = {
 
-        workspace_id : config.conversationConfig.workspace_id,
-        context : context || {},
-        input : message || {}
-    }
+              workspace_id : config.conversationConfig.workspace_id,
+              context : context,
+              input : content || {}
+          }
 
-    var sendMessage = new Promise( (resolve, reject) => {
+          var data = conversation.message(payload, (error, data) => {
 
-        conversation.message(payload, (error, data) => {
+              if(error) throw error;
+              else{
+                  redis.redis.set(key, JSON.stringify(data.context), () => {
 
-            if (error) {
+                      callback(data);
+                  });
+              }
+          });
 
-              reject(error);
+    }).catch((error) => {
 
-            }else{
-
-              resolve(data);
-            }
-        });
-    });
-
-    sendMessage.then(response => {
-
-        //console.log(response);
-        //console.log(response.output);
-        // console.log(response.output.log_messages);
-        var output = response.output.text[0]; // output.text는 배열
-        var new_context = response.context; // wcs 응답 context
-        var message = { "message" : { "text" : output } }
-
-    })
-    .catch(error => {
-
-        console.log(error);
+          throw error;
     });
 }
 

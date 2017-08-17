@@ -18,17 +18,18 @@ RoutesService.Init = function(){
 
     app.use(function log(req, res, next){
 
-        res.header('Access-Control-Allow-Origin', config.serverConfig.accept_domain);
-        res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+        res.header('Access-Control-Allow-Methods', 'GET, POST');
         console.log(util.format("## URL : %s / IP : %s ##", req.originalUrl, req.ip));
         next();
     });
 
+    /* 테스트용 START */
     app.get('/', (req, res, callback) => {
-      
+
 	      var result = "result";
         res.status(200).json({ "result" : result });
     });
+    /* 테스트용 END */
 
     app.use('/kakao', kakaoController);
 
