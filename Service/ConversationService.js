@@ -3,6 +3,7 @@
 var Conversation = require('watson-developer-cloud/conversation/v1');
 
 var config = require('../Common/Config.js');
+var common = require('../Common/Common.js');
 var redis = require('../Service/RedisService.js');
 
 var ConversationService = () => {};
@@ -20,7 +21,7 @@ ConversationService.GetConversationResponse = (userKey, messageType, messageCont
     let context = {};
     let result;
 
-    redis.contextCache.get(key).then((result) => {
+    redis.context.get(key).then((result) => {
 
           if(result != null){
 
@@ -38,8 +39,9 @@ ConversationService.GetConversationResponse = (userKey, messageType, messageCont
 
               if(error) throw error;
               else{
-                  redis.contextCache.set(key, JSON.stringify(data.context), () => {
+                  redis.context.set(key, JSON.stringify(data.context), () => {
 
+                      common.SetLogContent(data, key);
                       callback(data);
                   });
               }

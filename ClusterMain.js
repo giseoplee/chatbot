@@ -17,7 +17,6 @@ var http = require('http');
 var process = require('process');
 
 var config = require('./Common/Config.js');
-var redisService = require('./Service/RedisService.js');
 var routesService = require('./Service/RoutesService.js');
 var entityService = require('./Service/EntityService.js');
 var conversationService = require('./Service/ConversationService.js');
@@ -38,7 +37,7 @@ Cluster.Master = () => {
         var worker = cluster.fork();
     }
 
-    entityService.Init(); // 테이블 생성
+    entityService.Init();
 
     cluster.on("disconnect", (worker) => {
 
@@ -123,7 +122,6 @@ Cluster.ProcessRun = (workerId) => {
     app.use(methodOverride());
     app.set('trust proxy', config.serverConfig.trust_proxy_host);
 
-    redisService.Init(workerId);
     routesService.Init();
     conversationService.Init();
 

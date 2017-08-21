@@ -19,7 +19,7 @@ router.get('/keyboard', (req, res, callback) => {
 router.post('/message', (req, res, callback) => {
 
     // console.log("#### KAKAO PARAMETER START ####");
-    //console.log(req.body);
+    // console.log(req.body);
     // console.log("#### KAKAO PARAMETER END ####");
     let key = req.body.user_key;
     let type = req.body.type;
@@ -40,6 +40,11 @@ router.post('/message', (req, res, callback) => {
 
         res.send(message);
     });
+});
+
+router.get('/memory', (req, res, callback) => {
+
+    res.send(common.MemoryDataConvert(callback));
 });
 
 module.exports = router;

@@ -1,4 +1,4 @@
-const sequelize = require('./SequelizeService.js');
+var sequelize = require('./SequelizeService.js');
 var log = require("../Entity/Log.js");
 
 var EntityService = () => {};

@@ -13,7 +13,6 @@ var http = require('http');
 var process = require('process');
 
 var config = require('./Common/Config.js');
-var redisService = require('./Service/RedisService.js');
 var routesService = require('./Service/RoutesService.js');
 var entityService = require('./Service/EntityService.js');
 var conversationService = require('./Service/ConversationService.js');
@@ -30,7 +29,6 @@ app.use(methodOverride());
 app.set('trust proxy', config.serverConfig.trust_proxy_host);
 
 entityService.Init();
-redisService.Init();
 routesService.Init();
 conversationService.Init();
 

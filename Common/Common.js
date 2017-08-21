@@ -1,12 +1,15 @@
-/* freemed 소문자 -> sha512 해시 = auth_key  */
-
 var uuid = require('node-uuid');
 var crypto = require("crypto");
 var util = require('util');
+var moment = require('moment');
 
+var log = require('../Entity/Log.js');
+var redis = require('../Service/RedisService.js');
 var config = require('../Common/Config.js');
 
 var Common = () => {};
+
+/* EX) common.Encryption(description, 'aes-256-ctr') */
 
 Common.Encryption = (description, algorithm) => {
 
@@ -16,7 +19,7 @@ Common.Encryption = (description, algorithm) => {
     return encipherContent;
 }
 
-/* EX) common.Encryption(description, 'aes-256-ctr') */
+/* EX) common.Decryption(description, 'aes-256-ctr') */
 
 Common.Decryption = (description, algorithm) => {
 
@@ -26,7 +29,7 @@ Common.Decryption = (description, algorithm) => {
     return decipherContent;
 }
 
-/* EX) common.Decryption(description, 'aes-256-ctr') */
+/* EX) common.Hashing(description, 'ripemd160WithRSA') */
 
 Common.Hashing = (description, algorithm) => {
 
@@ -36,18 +39,91 @@ Common.Hashing = (description, algorithm) => {
     return hashedContent;
 }
 
-/* EX) common.Hashing(description, 'ripemd160WithRSA') */
+Common.MemoryDataConvert = (callback) => {
 
-Common.SetLogContent = (data) => {
+    redis.stream.on('data', (logKey) => {
 
-    console.log(data);
+        for(let i = 0; i < logKey.length; i++){
+
+            redis.log.get(logKey[i]).then((result) => {
+
+                result = JSON.parse(result);
+
+                log.create(result).then(() => {
+
+                    redis.log.del(logKey[i]).then((result) => {
+
+                        callback(result);
+
+                    }).catch((error) => {
+
+                        callback(JSON.stringify(error));
+                    });
+
+                }).catch((error) => {
+
+                    callback(JSON.stringify(error));
+                });
+            });
+        }
+    });
+}
+
+Common.SetLogContent = (data, key) => {
+
+    var logObject = {};
+    var primaryKey;
+
+    if(key) logObject.userId = key;
+    if(data.hasOwnProperty("intent")) logObject.intent = data.intents[0].intent;
+    if(data.hasOwnProperty("confidence")) logObject.confidence = data.intents[0].confidence;
+    if(data.hasOwnProperty("entities")){
+
+        for(let i = 0; i < data.entities.length; i ++){
+
+            switch(i){
+
+                case 0 :
+
+                  logObject.entityLabelA = data.entities[0].entity;
+                  logObject.entityValueA = data.entities[0].value;
+                  break;
+
+                case 1 :
+
+                  logObject.entityLabelB = data.entities[1].entity;
+                  logObject.entityValueB = data.entities[1].value;
+                  break;
+
+                case 2 :
+
+                  logObject.entityLabelC = data.entities[2].entity;
+                  logObject.entityValueC = data.entities[2].value;
+                  break;
+            }
+        }
+    }
+
+    logObject.userMessage = data.input.text;
+    logObject.botMessage = data.output.text[0];
+    logObject.conversationId = data.context.conversation_id;
+    if(data.output.nodes_visited[0]) logObject.nodeVisited = data.output.nodes_visited[0];
+    if(data.output.nodes_visited[1]) logObject.nodeVisitedId = data.output.nodes_visited[1];
+    if(data.context.ages) logObject.age = data.context.ages;
+    if(data.context.name) logObject.name = data.context.name;
+    if(data.output.log_messages[0]) logObject.errorMessage = data.output.log_messages[0];
+    if(data.context.system.dialog_turn_counter) logObject.dialogueCount = data.context.system.dialog_turn_counter;
+    logObject.createdAt = moment().format("YYYY-MM-DD HH:mm:ss");
+
+    primaryKey = key + String(moment().valueOf());
+    redis.log.set(primaryKey, JSON.stringify(logObject));
 }
 
 Common.SetMessage = (data) => {
 
-    console.log("#### CURRENT NODE START ####");
-    console.log(data.context.current_node);
-    console.log("#### CURRENT NODE END ####");
+    // console.log("#### CURRENT NODE START ####");
+    // console.log(data.context.current_node);
+    // console.log("#### CURRENT NODE END ####");
 
     let resultMessage = {};
 
