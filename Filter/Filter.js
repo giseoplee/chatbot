@@ -1,4 +1,6 @@
-var Filter = function(){};
+/* 미사용 확률 多 */
+
+var Filter = () => {};
 
 Filter.WorkSpaceCheck (workspace) => {
 
@@ -13,5 +15,4 @@ Filter.WorkSpaceCheck (workspace) => {
     }
 }
 
-
-module.exports = router;
+module.exports = Filter;

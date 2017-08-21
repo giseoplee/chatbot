@@ -1,3 +1,5 @@
+"use strict"
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -25,31 +27,30 @@ global.app = new express();
 var cpuNo = os.cpus().length;
 cluster.schedulingPolicy = cluster.SCHED_RR; // 라운드 로빈 방식으로 클러스터링 방식 지정
 
-var Cluster = function(){};
+var Cluster = () => {};
 
-Cluster.Master = function(){
+Cluster.Master = () => {
 
     console.log("## Master Cluster Start ##");
 
-    // for(var i = 0; i < cpuNo; i++){
-    for(var i = 0; i < 1; i++){
+    for(var i = 0; i < cpuNo; i++){
 
         var worker = cluster.fork();
     }
 
-    //entityService.Init(); // 테이블 생성
+    entityService.Init(); // 테이블 생성
 
-    cluster.on("disconnect", function(worker){
+    cluster.on("disconnect", (worker) => {
 
         console.log(util.format("## [master] worker id : %d exit successfully ##", worker.id));
     });
 
-    cluster.on("exit", function(worker, code, signal){
+    cluster.on("exit", (worker, code, signal) => {
 
         console.log("## [master] worker process id : "+worker.process.id+" died ##");
     });
 
-    cluster.on("uncaughtException", function(error){
+    cluster.on("uncaughtException", (error) => {
 
         console.log("## [master] server uncaughtexception ##");
         console.log("## [master] uncaughtexception : "+error+" ##");
@@ -63,9 +64,9 @@ Cluster.Master = function(){
     });
 }
 
-Cluster.Worker = function(workerId){
+Cluster.Worker = (workerId) => {
 
-    domain.on("error", function(error){
+    domain.on("error", (error) => {
 
         try{
             console.log(util.format("## [worker][%d] server uncaughtexception ##", workerId));
@@ -93,12 +94,12 @@ Cluster.Worker = function(workerId){
         }
     });
 
-    process.on("exit", function(){
+    process.on("exit", () => {
 
         console.log("## [worker][%d] process about to exit ##", workerId);
     });
 
-    domain.run(function(){
+    domain.run( () => {
 
         try{
 
@@ -111,7 +112,7 @@ Cluster.Worker = function(workerId){
     });
 }
 
-Cluster.ProcessRun = function(workerId){
+Cluster.ProcessRun = (workerId) => {
 
     app.set('port', process.env.PORT || config.serverConfig.port);
 
@@ -126,7 +127,7 @@ Cluster.ProcessRun = function(workerId){
     routesService.Init();
     conversationService.Init();
 
-    http.createServer(app).listen(app.get('port'), function () {
+    http.createServer(app).listen(app.get('port'), () => {
         console.log(util.format('## [processRun] [pid:%d] [childNo:%d] Server running at %d ##', process.pid, workerId, config.serverConfig.port));
     });
 }

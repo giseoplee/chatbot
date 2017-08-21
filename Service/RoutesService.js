@@ -1,32 +1,24 @@
-var csurf = require('csurf');
 var util = require('util');
 
 var config = require('../Common/Config.js');
 var kakaoController = require('../Controller/KakaoController.js');
 
-var csrfProtection = new csurf({ cookie: true });
+var RoutesService = () => {};
 
-var RoutesService = function(){};
+RoutesService.Init = () => {
 
-RoutesService.Init = function(){
-
-    if (app.get('env') === 'production'){
-
-        app.use(csrfProtection);
-        console.log(util.format('Use Middleware csrf'));
-    }
-
-    app.use(function log(req, res, next){
+    app.use((req, res, next) => {
 
         res.header('Access-Control-Allow-Methods', 'GET, POST');
         console.log(util.format("## URL : %s / IP : %s ##", req.originalUrl, req.ip));
         next();
     });
 
-    /* 테스트용 START */
+    /* 브라우저 값 출력 테스트용 START */
     app.get('/', (req, res, callback) => {
 
 	      var result = "result";
+
         res.status(200).json({ "result" : result });
     });
     /* 테스트용 END */

@@ -1,15 +1,15 @@
-/* RDB에 로깅하는 부분 */
+/* sequelize transaction example */
 
 var sequelize = require('sequelize');
 var dbService = require('../Service/SequelizeService.js');
 var user = require('../Entity/User.js');
 
-var UserModel = function(data){
+var UserModel = (data) => {
     this.data = data;
 }
 
 /* Create */
-UserModel.Insert = function(callback){
+UserModel.Insert = (callback) => {
 
     user.create(
         { account : "test0", password : "passowrd0" }
@@ -23,7 +23,7 @@ UserModel.Insert = function(callback){
 }
 
 /* Read */
-UserModel.List = function(callback){
+UserModel.List = (callback) => {
 
     user.findAll({
         where : {
@@ -41,7 +41,7 @@ UserModel.List = function(callback){
 }
 
 /* Update */
-UserModel.Update = function(callback){
+UserModel.Update = (callback) => {
 
     user.update(
         { password : "test123$" },
@@ -56,7 +56,7 @@ UserModel.Update = function(callback){
 }
 
 /* Delete */
-UserModel.Delete = function(callback){
+UserModel.Delete = (callback) => {
 
     user.destroy(
         { where : [{account : "test0", password : "passowrd0"}] }
@@ -69,7 +69,7 @@ UserModel.Delete = function(callback){
     });
 }
 
-UserModel.FindAndCreate = function(data, callback){
+UserModel.FindAndCreate = (data, callback) => {
 
     user.findAll({
 

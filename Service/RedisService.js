@@ -2,25 +2,40 @@ var ioRedis = require('ioredis');
 var util = require('util');
 var config = require('../Common/Config.js');
 
-var RedisService = function(){};
+var RedisService = () => {};
 
-RedisService.Init = function(workerId){
+RedisService.Init = (workerId) => {
 
-    this.redis = new ioRedis(
+    this.contextCache = new ioRedis(
     {
         port: config.redisConfig.redisPort,
         host: config.redisConfig.redisHost,
         password: config.redisConfig.redisPassword,
-        db: 0, // 분산 구조로 변경 필요
+        db: 0,
 
-        retryStrategy: function (times) {
+        retryStrategy: (times) => {
             var delay = Math.min(times * 2, 2000);
             console.log(delay);
             return delay;
         }
     });
 
-    console.log(util.format("## [%d worker] redis started ##", workerId));
+    this.logCache = new ioRedis(
+    {
+        port: config.redisConfig.redisPort,
+        host: config.redisConfig.redisHost,
+        password: config.redisConfig.redisPassword,
+        db: 1,
+
+        retryStrategy: (times) => {
+            var delay = Math.min(times * 2, 2000);
+            console.log(delay);
+            return delay;
+        }
+    });
+
+    if(workerId) console.log(util.format("## [%d worker] redis started ##", workerId));
+    else console.log("## redis service started ##");
 }
 
 module.exports = RedisService;

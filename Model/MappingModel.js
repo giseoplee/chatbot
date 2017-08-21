@@ -1,9 +1,9 @@
-/* RDB에 로깅하는 부분 */
+/* 미사용 확률 多 */
 
 var redisService = require('../Service/SequelizeService.js');
 
 
-var MappingModel = function(data){
+var MappingModel = (data) => {
     this.data = data;
 }
 

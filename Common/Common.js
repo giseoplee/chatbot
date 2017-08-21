@@ -1,14 +1,14 @@
+/* freemed 소문자 -> sha512 해시 = auth_key  */
+
 var uuid = require('node-uuid');
 var crypto = require("crypto");
 var util = require('util');
 
 var config = require('../Common/Config.js');
 
-var Common = function(){};
+var Common = () => {};
 
-/* freemed 소문자 -> sha512 해시 = auth_key  */
-
-Common.Encryption = function(description, algorithm){
+Common.Encryption = (description, algorithm) => {
 
     var cipher = crypto.createCipher(algorithm, config.serverConfig.auth_key);
     var encipherContent = cipher.update(description, 'utf8', 'hex');
@@ -18,7 +18,7 @@ Common.Encryption = function(description, algorithm){
 
 /* EX) common.Encryption(description, 'aes-256-ctr') */
 
-Common.Decryption = function(description, algorithm){
+Common.Decryption = (description, algorithm) => {
 
     var decipher = crypto.createDecipher(algorithm, config.serverConfig.auth_key);
     var decipherContent = decipher.update(description, 'hex', 'utf8');
@@ -28,7 +28,7 @@ Common.Decryption = function(description, algorithm){
 
 /* EX) common.Decryption(description, 'aes-256-ctr') */
 
-Common.Hashing = function(description, algorithm){
+Common.Hashing = (description, algorithm) => {
 
     var hash = crypto.createHash(algorithm);
     var hashedContent = hash.update(config.serverConfig.auth_key+description);
@@ -38,15 +38,25 @@ Common.Hashing = function(description, algorithm){
 
 /* EX) common.Hashing(description, 'ripemd160WithRSA') */
 
+Common.SetLogContent = (data) => {
+
+    console.log(data);
+}
+
 Common.SetMessage = (data) => {
 
+    console.log("#### CURRENT NODE START ####");
     console.log(data.context.current_node);
+    console.log("#### CURRENT NODE END ####");
 
     let resultMessage = {};
 
     switch(data.context.current_node)
     {
-        case "0_4", "1_3", "2_3", "3_3":
+        case "0_4" :
+        case "1_3" :
+        case "2_3" :
+        case "3_3" :
           var text = data.output.text[0];
 
           resultMessage =
@@ -377,6 +387,74 @@ Common.SetMessage = (data) => {
             }
           };
           return resultMessage;
+
+          case "reco":
+            var recommended = data.context.recommended;
+            switch(recommended){
+                case "아몬드":
+                    var url = "http://postfiles9.naver.net/MjAxNzA3MTdfMjE0/MDAxNTAwMjY1MzI5NDM3.NUhz_mBmkf1toQufupv5QvlqJATcuPC_2Du0MqJXE6kg.Kq8QB6P-60uHnH4iIBEtqC3aWUiyj-gHx4vFnviYnQ8g.JPEG.hy920325/1200_%EC%95%84%EB%AA%AC%EB%93%9C.jpg?type=w966";
+                    break;
+                case "오리지널":
+                    var url = "http://postfiles16.naver.net/MjAxNzA3MTdfOTYg/MDAxNTAwMjY1MzI4NTQz.joHMdO6HbNbLH9rhFZrYj_2MzcSM8qV19gfQ4OB04w0g.X-8XPq2Zfmu_wnCyONZqbSAshHWldM8q2TzG5NGAjGMg.JPEG.hy920325/1200_%EC%98%A4%EB%A6%AC%EC%A7%80%EB%82%A0.jpg?type=w966";
+                    break;
+                case "누드":
+                    var url = "http://postfiles11.naver.net/MjAxNzA3MTdfMjE0/MDAxNTAwMjY1MzI4MjQ5.ZQc0rQAJcn3W01R3sLgAl1PZPaDNwvaZGaCl9fsBVu8g.ZU6z3dE-8ZsqQWMKoDfjCkOpBoXpQfH2IlkNnP6qqMcg.JPEG.hy920325/%EB%88%84%EB%93%9C.jpg?type=w966";
+                    break;
+                case "누드치즈":
+                    var url ="http://postfiles10.naver.net/MjAxNzA3MTdfMTA2/MDAxNTAwMjY1ODY5Mzc2.00g59n-Y6yuLFNo2S3YseeF5i7sXwEzVBErh-Qba35Eg.FUtOHI4Pk5u1x4jFo1HqqWbtigoIeRsQp6t_wInUkqsg.JPEG.hy920325/%EB%88%84%EB%93%9C%EC%B9%98%EC%A6%88.jpg?type=w966";
+                    break;
+                case "카페라떼":
+                    var url = "http://postfiles10.naver.net/MjAxNzA3MTdfMjUw/MDAxNTAwMjY1MzQyMDcx.W0E-yomdjsdPR9M0gNwuwj3SjrfoEU-8CkEPyEA55rkg.I0eLUtjMmX4VYE1RUgAj4DD028CGv_hjL__xNTOMlREg.JPEG.hy920325/%EB%8D%94%EB%B8%94%EB%94%A5%EC%B9%B4%ED%8E%98%EB%9D%BC%EB%96%BC.jpg?type=w966";
+                    break;
+                case "스키니카카오":
+                    var url = "http://postfiles7.naver.net/MjAxNzA3MTdfMTM4/MDAxNTAwMjY1MzQxMzcz.875LjFcUOQgf0Su-nZyDjQlJuv_0l_VtZABVa0gCtGMg.4QKPUFF9QYuwtBZVwdZXn09XcDRU7omhiLk1sM-Rsl8g.JPEG.hy920325/%EC%8A%A4%ED%82%A4%EB%8B%88%EC%B9%B4%EC%B9%B4%EC%98%A4.jpg?type=w966";
+                    break;
+                case "바닐라블랙":
+                    var url = "http://blog.naver.com/PostList.nhn?blogId=hy920325&widgetTypeCall=true&topReferer=https%3A%2F%2Fwww.naver.com%2F#";
+                    break;
+                case "화이트쿠키":
+                var url = "http://postfiles14.naver.net/MjAxNzA3MTdfMTIw/MDAxNTAwMjY1MzQzNDA0.BNZveDRbzbKLa_bMRMOaLP05nI-09OkcwXf4f13PZjAg.NkgyxO6IBSxAETROaFLZVPz-9yASaIMSparXEoNec5gg.JPEG.hy920325/%ED%99%94%EC%9D%B4%ED%8A%B8%EC%BF%A0%ED%82%A4.jpg?type=w966";
+                    break;
+                case "카카오닙스":
+                    var url = "https://cdn.pixabay.com/photo/2016/07/20/07/06/cocoa-1529746_960_720.jpg";
+                    break;
+                case "요구르트":
+                    var url = "http://postfiles9.naver.net/MjAxNzA3MTdfMjUx/MDAxNTAwMjY1ODY5NTk4.hz-XRoyHuw0MCnxIp7AqaAcJH-rvWssIP0-gC_7LC9Qg.RbjLtE7pIv4rLTUfIWOWe5HLbkGGJJeH6I3MznQJxGAg.JPEG.hy920325/%EB%8D%94%EB%B8%94%EB%94%A5_%EB%B9%BC%EB%B9%BC%EB%A1%9C_%EC%9A%94%EA%B5%AC%EB%A5%B4%ED%8A%B8_%EC%8B%9C%EB%AE%AC.jpg?type=w966";
+                    break;
+                case "누드녹차":
+                    var url = "http://postfiles11.naver.net/MjAxNzA3MTdfNyAg/MDAxNTAwMjY1MzMxMjY1.lRBcJeQnLUsX1646OUkQA4AIn4Oke00gOcb22xvYA38g.aWMxBOxxnlk3YPW_08YlnFozgI7nxz-r-NwhrnKk0a8g.JPEG.hy920325/%EB%88%84%EB%93%9C%EB%85%B9%EC%B0%A8.jpg?type=w966";
+                    break;
+                case "코코넛":
+                    var url = "http://postfiles3.naver.net/MjAxNzA3MTdfMjgx/MDAxNTAwMjY1MzQzNjY0.2nbE4S-ly5kG9oI533vcRONfAAdz_bnAnk2yQ_StMx8g.L9atJb1pLYgsOPeU7XAywNBfqiHR_U4N-OywCsNPdGcg.JPEG.hy920325/%EC%BD%94%EC%BD%94%EB%84%9B.jpg?type=w966";
+                    break;
+            }
+
+            var text = "인공지능으로 추천하는 빼빼로는 바로..!(좋아)\n\n";
+            text += data.output.text[0];
+            text += "\n\n내 추천.. 어땠어?\n";
+
+            resultMessage =
+            {
+              "message": {
+                "text": text,
+                "photo": {
+                  "url": url,
+                  "width": 640,
+                  "height": 480
+                },
+              },
+              "keyboard": {
+                "type": "buttons",
+                "buttons": [
+                    "엄지척척👍👍",
+                    "엄지척👍",
+                    "별 하나도 아까워!",
+                    "처음으로"
+                ]
+              }
+            };
+
+            return resultMessage;
 
         default :
           var wcstext = data.output.text[0];
