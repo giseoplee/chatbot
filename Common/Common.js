@@ -45,15 +45,28 @@ Common.MemoryDataConvert = (callback) => {
 
         for(let i = 0; i < logKey.length; i++){
 
+            console.log("## FOR LOGIC & 1-CYCLE START ##");
+            console.log(logKey[i]);
+            console.log("## FOR LOGIC & 1-CYCLE END ##");
+
             redis.log.get(logKey[i]).then((result) => {
 
-                result = JSON.parse(result);
+                console.log("## GET REDIS & 2-CYCLE START ##");
+                console.log(logKey[i]);
+                console.log("## GET REDIS & 2-CYCLE END ##");
 
+                result = JSON.parse(result);
                 log.create(result).then(() => {
+
+                    console.log("## RDB INSERT & 3-CYCLE START ##");
+                    console.log(logKey[i]);
+                    console.log("## RDB INSERT & 3-CYCLE END ##");
 
                     redis.log.del(logKey[i]).then((result) => {
 
-                        callback(result);
+                        console.log("## DELETE REDIS & 4-CYCLE START ##");
+                        console.log(logKey[i]);
+                        console.log("## DELETE REDIS & 4-CYCLE END ##");
 
                     }).catch((error) => {
 
@@ -69,10 +82,60 @@ Common.MemoryDataConvert = (callback) => {
     });
 }
 
+Common.Eunsol = (callback) => {
+
+    redis.stream.on('data', function(resultKeys) {
+
+        console.log(resultKeys);
+
+        for (var i = 0; i < resultKeys.length; i++) {
+
+            console.log("## FOR START 111 ##");
+            console.log(resultKeys[i]);
+            console.log("## FOR END 111 ##");
+
+            redis.log.get(resultKeys[i]).then((result) => {
+
+                var jsonResult = JSON.parse(result);
+
+                console.log("## GET REDIS DATA START 222 ##");
+                console.log(resultKeys[i]);
+                console.log("## GET REDIS DATA END 222 ##");
+
+                log.create(jsonResult).then((result) => {
+
+                    console.log("## RDB INSERT START 333 ##");
+                    console.log(resultKeys[i]);
+                    console.log("## RDB INSERT END 333 ##");
+
+                    redis.log.del(resultKeys[i]).then((result) => {
+
+                        console.log("## IN DELETE SUCCESS START 444 ##");
+                        callback(resultKeys[i]);
+                        console.log("## IN DELETE SUCCESS END 444 ##");
+
+                    }).catch((error) => {
+
+                        console.log("## IN DELETE FAIL START 444 ##");
+                        console.log(error);
+                        console.log("## IN DELETE FAIL END 444 ##");
+                    });
+
+                }).catch(function(err) {
+
+                    callback(error);
+                });
+            });
+        }
+    });
+}
+
 Common.SetLogContent = (data, key) => {
 
     var logObject = {};
     var primaryKey;
+
+    console.log(data);
 
     if(key) logObject.userId = key;
     if(data.hasOwnProperty("intent")) logObject.intent = data.intents[0].intent;
@@ -111,9 +174,17 @@ Common.SetLogContent = (data, key) => {
     if(data.output.nodes_visited[1]) logObject.nodeVisitedId = data.output.nodes_visited[1];
     if(data.context.ages) logObject.age = data.context.ages;
     if(data.context.name) logObject.name = data.context.name;
-    if(data.output.log_messages[0]) logObject.errorMessage = data.output.log_messages[0];
+    if(data.output.log_messages[0]){
+
+        logObject.logLevel = data.output.log_messages[0].level;
+        logObject.logMessage = data.output.log_messages[0].msg;
+    }
     if(data.context.system.dialog_turn_counter) logObject.dialogueCount = data.context.system.dialog_turn_counter;
     logObject.createdAt = moment().format("YYYY-MM-DD HH:mm:ss");
+
+    console.log("## ERROR MESSAGE START ##");
+    console.log(data.output.log_messages[0]);
+    console.log("## ERROR MESSAGE END ##");
 
     primaryKey = key + String(moment().valueOf());
     redis.log.set(primaryKey, JSON.stringify(logObject));

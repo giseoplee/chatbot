@@ -19,7 +19,8 @@ const Log = dbService.define('log', {
     nodeVisitedId : { type : sequelize.STRING(20), allowNull : true },
     age : { type : sequelize.STRING(20), allowNull : true },
     name : { type : sequelize.STRING(20), allowNull : true },
-    errorMessage : { type : sequelize.TEXT, allowNull : true },
+    logLevel : { type : sequelize.STRING(50), allowNull : true },
+    logMessage : { type : sequelize.TEXT, allowNull : true },
     dialogueCount : { type : sequelize.INTEGER(11), allowNull : true }
 },
 {

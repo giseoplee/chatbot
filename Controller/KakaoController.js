@@ -44,7 +44,7 @@ router.post('/message', (req, res, callback) => {
 
 router.get('/memory', (req, res, callback) => {
 
-    res.send(common.MemoryDataConvert(callback));
+    res.send(common.Eunsol(callback));
 });
 
 module.exports = router;
