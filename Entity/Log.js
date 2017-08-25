@@ -21,12 +21,14 @@ const Log = dbService.define('log', {
     name : { type : sequelize.STRING(20), allowNull : true },
     logLevel : { type : sequelize.STRING(50), allowNull : true },
     logMessage : { type : sequelize.TEXT, allowNull : true },
-    dialogueCount : { type : sequelize.INTEGER(11), allowNull : true }
+    dialogueCount : { type : sequelize.INTEGER(11), allowNull : true },
+    createdAt : { type : sequelize.DATE, allowNull : true }
 },
 {
     engine : "ARCHIVE",
     charset : "utf8",
-    collate : "utf8_general_ci"
+    collate : "utf8_general_ci",
+    timestamps: false
 });
 
 module.exports = Log;

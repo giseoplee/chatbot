@@ -42,9 +42,15 @@ router.post('/message', (req, res, callback) => {
     });
 });
 
+/**
+
+redis > RDB 컨버팅 테스트용 로직
+
 router.get('/memory', (req, res, callback) => {
 
     res.send(common.Eunsol(callback));
 });
+
+*/
 
 module.exports = router;

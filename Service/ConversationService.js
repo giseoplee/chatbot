@@ -35,9 +35,17 @@ ConversationService.GetConversationResponse = (userKey, messageType, messageCont
               input : content || {}
           }
 
+          // console.log("## PAYLOAD LOGGING START ##");
+          // console.log(payload);
+          // console.log("## PAYLOAD LOGGING END ##");
+
           var data = conversation.message(payload, (error, data) => {
 
-              if(error) throw error;
+              // console.log("## WCS RESPONSE LOGGING START ##");
+              // console.log(data);
+              // console.log("## WCS RESPONSE LOGGING END ##");
+
+              if(error) throw JSON.stringify(error);
               else{
                   redis.context.set(key, JSON.stringify(data.context), () => {
 

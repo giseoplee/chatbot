@@ -1,5 +1,13 @@
 var fs = require("fs");
 
+// var _serverConfigDir = "/home/ubuntu/chatbot/Config/server.conf";
+// var _storeConfigDir = "/home/ubuntu/chatbot/Config/store.conf";
+// var _redisConfigDir = "/home/ubuntu/chatbot/Config/redis.conf";
+// var _conversationConfigDir = "/home/ubuntu/chatbot/Config/conversation.conf";
+// var _serverConfigDir = "C:/Users/LDCC/Desktop/제과챗봇/Chatbot/Config/server.conf";
+// var _storeConfigDir = "C:/Users/LDCC/Desktop/제과챗봇/Chatbot/Config/store.conf";
+// var _redisConfigDir = "C:/Users/LDCC/Desktop/제과챗봇/Chatbot/Config/redis.conf";
+// var _conversationConfigDir = "C:/Users/LDCC/Desktop/제과챗봇/Chatbot/Config/conversation.conf";
 var _serverConfigDir = "./Config/server.conf";
 var _storeConfigDir = "./Config/store.conf";
 var _redisConfigDir = "./Config/redis.conf";

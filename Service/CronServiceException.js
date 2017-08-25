@@ -42,7 +42,7 @@ Exception.primarykeyCheck = (pk, res) => {
 Exception.redisDataLengthCheck =  (length, res) => {
   if (length <= 0) { // redis is empty
 
-    console.log('redis is empty!!!');
+    console.log('empty memory');
     return false;
 
   }

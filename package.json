@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "clusterStart": "node ClusterMain.js",
-    "singleStart" : "node SingleMain.js"
+    "singleStart": "node SingleMain.js"
   },
   "dependencies": {
     "body-parser": "~1.15.2",

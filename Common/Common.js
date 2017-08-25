@@ -1,4 +1,4 @@
-var uuid = require('node-uuid');
+var uuidv4 = require('uuid/v4');
 var crypto = require("crypto");
 var util = require('util');
 var moment = require('moment');
@@ -135,8 +135,6 @@ Common.SetLogContent = (data, key) => {
     var logObject = {};
     var primaryKey;
 
-    console.log(data);
-
     if(key) logObject.userId = key;
     if(data.hasOwnProperty("intent")) logObject.intent = data.intents[0].intent;
     if(data.hasOwnProperty("confidence")) logObject.confidence = data.intents[0].confidence;
@@ -182,12 +180,16 @@ Common.SetLogContent = (data, key) => {
     if(data.context.system.dialog_turn_counter) logObject.dialogueCount = data.context.system.dialog_turn_counter;
     logObject.createdAt = moment().format("YYYY-MM-DD HH:mm:ss");
 
-    console.log("## ERROR MESSAGE START ##");
-    console.log(data.output.log_messages[0]);
-    console.log("## ERROR MESSAGE END ##");
+    // console.log("## ERROR MESSAGE START ##");
+    // console.log(data.output.log_messages[0]);
+    // console.log("## ERROR MESSAGE END ##");
 
-    primaryKey = key + String(moment().valueOf());
-    redis.log.set(primaryKey, JSON.stringify(logObject));
+    //primaryKey = key + "-" + String(uuidv4());
+    primaryKey = uuidv4();
+    redis.log.set(primaryKey, JSON.stringify(logObject)).then().catch((error) => {
+
+        console.log(JSON.stringify(error));
+    });
 }
 
 Common.SetMessage = (data) => {
