@@ -3,6 +3,8 @@ var dbService = require('../Service/SequelizeService.js');
 
 const Log = dbService.define('log', {
 
+    id: { type: sequelize.INTEGER(11), primaryKey: true, autoIncrement: true },
+    messageId : {type : sequelize.CHAR(36), allowNull : false, unique: true},
     userId : { type : sequelize.CHAR(12), allowNull : false },
     intent : { type : sequelize.STRING(50), allowNull : true },
     confidence : { type : sequelize.DOUBLE, allowNull : true },
@@ -23,6 +25,13 @@ const Log = dbService.define('log', {
     logMessage : { type : sequelize.TEXT, allowNull : true },
     dialogueCount : { type : sequelize.INTEGER(11), allowNull : true },
     createdAt : { type : sequelize.DATE, allowNull : true }
+},
+{
+    indexes : [{
+
+        unique : true,
+        fields : [ 'messageId' ]
+    }]
 },
 {
     engine : "ARCHIVE",

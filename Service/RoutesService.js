@@ -14,17 +14,7 @@ RoutesService.Init = () => {
         next();
     });
 
-    /* 브라우저 값 출력 테스트용 START */
-    app.get('/', (req, res, callback) => {
-
-	      var result = "result";
-
-        res.status(200).json({ "result" : result });
-    });
-    /* 테스트용 END */
-
     app.use('/kakao', kakaoController);
-
     console.log("## setup routes ##");
 }
 

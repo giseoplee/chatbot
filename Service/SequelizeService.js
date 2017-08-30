@@ -6,6 +6,9 @@ const sequelize = new Sequelize(config.storeConfig.mysqlDatabase,
                          config.storeConfig.mysqlPassword, {
     host : config.storeConfig.mysqlHost,
     dialect : config.storeConfig.storeDBMS,
+    dialectOptions : {
+      requestTimeout : 30000
+    },
     port : config.storeConfig.mysqlPort,
     pool : {
       max : config.storeConfig.ConnectionLimit,
@@ -13,7 +16,8 @@ const sequelize = new Sequelize(config.storeConfig.mysqlDatabase,
       idle : config.storeConfig.ConnectionIdle,
       waitForConnections : false /* 사용 가능한 커넥션이 없을 경우 바로 ERROR를 return | true일 경우 대기 */
     },
-    timezone : "+09:00"
+    timezone : "+09:00",
+    logging : false
 });
 
 module.exports = sequelize;
