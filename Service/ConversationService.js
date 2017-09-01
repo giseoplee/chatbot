@@ -1,6 +1,7 @@
 'use strict';
 
 var Conversation = require('watson-developer-cloud/conversation/v1');
+var moment = require('moment');
 
 var config = require('../Common/Config.js');
 var common = require('../Common/Common.js');
@@ -28,6 +29,9 @@ ConversationService.GetConversationResponse = (userKey, messageType, messageCont
               context = JSON.parse(result);
           }
 
+          context.expires = undefined;
+          delete context.expires;
+
           let payload = {
 
               workspace_id : config.conversationConfig.workspace_id,
@@ -47,6 +51,8 @@ ConversationService.GetConversationResponse = (userKey, messageType, messageCont
 
               if(error) throw JSON.stringify(error);
               else{
+
+                  data.context.expires = moment().add('minutes', 60).valueOf();
                   redis.context.set(key, JSON.stringify(data.context), () => {
 
                       common.SetLogContent(data, key);
