@@ -14,8 +14,7 @@ var contextCache = new ioRedis(
       db: 0,
 
       retryStrategy: (times) => {
-          var delay = Math.min(times * 2, 2000);
-          console.log(delay);
+          var delay = Math.min(times * 4, 4000);
           return delay;
       }
 });
@@ -28,17 +27,13 @@ var logCache = new ioRedis(
     db: 1,
 
     retryStrategy: (times) => {
-        var delay = Math.min(times * 2, 2000);
-        console.log(delay);
+        var delay = Math.min(times * 4, 4000);
         return delay;
     }
 });
 
 RedisService.context = contextCache;
 RedisService.log = logCache;
-RedisService.stream = logCache.scanStream({
-
-    count : 10
-});
+RedisService.stream = logCache.scanStream({ count : 1 });
 
 module.exports = RedisService;
