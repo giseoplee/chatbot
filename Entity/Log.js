@@ -4,7 +4,7 @@ var dbService = require('../Service/SequelizeService.js');
 const Log = dbService.define('log', {
 
     id: { type: sequelize.INTEGER(11), primaryKey: true, autoIncrement: true },
-    messageId : {type : sequelize.CHAR(36), allowNull : false, unique: true},
+    messageId : {type : sequelize.CHAR(36), allowNull : false},
     userId : { type : sequelize.CHAR(12), allowNull : false },
     intent : { type : sequelize.STRING(50), allowNull : true },
     confidence : { type : sequelize.DOUBLE, allowNull : true },
@@ -27,17 +27,10 @@ const Log = dbService.define('log', {
     createdAt : { type : sequelize.DATE, allowNull : true }
 },
 {
-    indexes : [{
-
-        unique : true,
-        fields : [ 'messageId' ]
-    }]
-},
-{
-    engine : "ARCHIVE",
-    charset : "utf8",
-    collate : "utf8_general_ci",
-    timestamps: false
+    indexes : [{ fields : ['messageId'], unique: true}],
+    timestamps : false
 });
+
+// ALTER TABLE `logs` ADD UNIQUE INDEX `logs_message_id` (`messageId`)
 
 module.exports = Log;

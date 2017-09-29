@@ -1,13 +1,15 @@
-var sequelize = require('./SequelizeService.js');
+var dbService = require('./SequelizeService.js');
 var log = require("../Entity/Log.js");
 
 var EntityService = () => {};
 
 EntityService.Init = () => {
 
-    var result = log.sync().then( (result, error, callback) => {
+    var result = log.sync().then().catch((error) => {
 
-        if(error) callback(result);
+        console.log("### TABLE CREATE ERROR START ###");
+        console.log(error);
+        console.log("### TABLE CREATE ERROR END ###");
     });
 }
 

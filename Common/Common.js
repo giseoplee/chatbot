@@ -195,10 +195,22 @@ Common.SetLogContent = (data, key) => {
 Common.SetMessage = (data) => {
 
     // console.log("#### CURRENT NODE START ####");
-    // console.log(data.context.current_node);
+    // console.log(data.context);
     // console.log("#### CURRENT NODE END ####");
 
     let resultMessage = {};
+
+    if(data == "unknown_api_error"){
+
+        resultMessage = {
+
+            "message" : {
+                "text" : "알 수 없는 에러가 발생함🙊"
+            }
+        }
+
+        return resultMessage;
+    }
 
     switch(data.context.current_node)
     {

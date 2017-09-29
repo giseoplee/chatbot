@@ -20,7 +20,6 @@ ConversationService.GetConversationResponse = (userKey, messageType, messageCont
     let type = messageType;
     let content = { 'text' : messageContent };
     let context = {};
-    let result;
 
     redis.context.get(key).then((result) => {
 
@@ -45,13 +44,14 @@ ConversationService.GetConversationResponse = (userKey, messageType, messageCont
 
           var data = conversation.message(payload, (error, data) => {
 
-              // console.log("## WCS RESPONSE LOGGING START ##");
-              // console.log(data);
-              // console.log("## WCS RESPONSE LOGGING END ##");
+              console.log("## WCS RESPONSE LOGGING START ##");
+              console.log(JSON.stringify(data));
+              console.log("## WCS RESPONSE LOGGING END ##");
 
-              if(error) throw JSON.stringify(error);
+              if(error) callback("unknown_api_error");
               else{
 
+                  data.context.time = moment().format("YYYY-MM-DD HH:mm:ss");
                   data.context.expires = moment().add('minutes', 60).valueOf();
                   redis.context.set(key, JSON.stringify(data.context), () => {
 

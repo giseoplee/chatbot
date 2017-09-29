@@ -16,6 +16,7 @@ var config = require('./Common/Config.js');
 var routesService = require('./Service/RoutesService.js');
 var entityService = require('./Service/EntityService.js');
 var conversationService = require('./Service/ConversationService.js');
+var dummyService = require('./Service/DummyConversationService.js');
 
 global.app = new express();
 
@@ -31,6 +32,7 @@ app.set('trust proxy', config.serverConfig.trust_proxy_host);
 entityService.Init();
 routesService.Init();
 conversationService.Init();
+dummyService.Init();
 
 http.createServer(app).listen(app.get('port'), () => {
     console.log(util.format('## [processRun] [pid:%d] Server running at %d ##', process.pid, config.serverConfig.port));

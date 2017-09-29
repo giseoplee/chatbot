@@ -2,6 +2,7 @@ var util = require('util');
 var express = require('express');
 
 var conversationService = require('../Service/ConversationService.js');
+var dummyService = require('../Service/DummyConversationService.js');
 var common = require('../Common/Common.js');
 var router = express.Router();
 
@@ -33,6 +34,29 @@ router.post('/message', (req, res, callback) => {
 
         if(error) throw error;
         let message = common.SetMessage(data);
+
+        // console.log("#### SET MESSAGE RESPONSE START ####");
+        // console.log(message);
+        // console.log("#### SET MESSAGE RESPONSE END ####");
+
+        res.send(message);
+    });
+});
+
+router.post('/message/dummy/test', (req, res, callback) => {
+
+    // console.log("#### PARAMETER START ####");
+    // console.log(req.body);
+    // console.log("#### PARAMETER END ####");
+
+    dummyService.GetConversationResponse((data, error) => {
+
+        // console.log("#### DUMMY WCS RESPONSE START ####");
+        // console.log(data);
+        // console.log("#### DUMMY WCS RESPONSE END ####");
+
+        if(error) throw error;
+        var message = common.SetMessage(data);
 
         // console.log("#### SET MESSAGE RESPONSE START ####");
         // console.log(message);
