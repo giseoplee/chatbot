@@ -26,21 +26,25 @@ router.post('/message', (req, res, callback) => {
     let type = req.body.type;
     let content = req.body.content;
 
-    conversationService.GetConversationResponse(key, type, content, (data, error) => {
+    try {
+        conversationService.GetConversationResponse(key, type, content, (data, error) => {
 
-        // console.log("#### WCS RESPONSE START ####");
-        // console.log(data);
-        // console.log("#### WCS RESPONSE END ####");
-
-        if(error) throw error;
-        let message = common.SetMessage(data);
-
-        // console.log("#### SET MESSAGE RESPONSE START ####");
-        // console.log(message);
-        // console.log("#### SET MESSAGE RESPONSE END ####");
-
-        res.send(message);
-    });
+            // console.log("#### WCS RESPONSE START ####");
+            // console.log(data);
+            // console.log("#### WCS RESPONSE END ####");
+    
+            if(error) throw error;
+            let message = common.SetMessage(data);
+    
+            // console.log("#### SET MESSAGE RESPONSE START ####");
+            // console.log(message);
+            // console.log("#### SET MESSAGE RESPONSE END ####");
+    
+            res.send(message);
+        });
+    } catch (error) {
+        throw error;
+    }
 });
 
 router.post('/message/dummy/test', (req, res, callback) => {
