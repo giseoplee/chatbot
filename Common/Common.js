@@ -12,7 +12,6 @@ var Common = () => {};
 /* EX) common.Encryption(description, 'aes-256-ctr') */
 
 Common.Encryption = (description, algorithm) => {
-
     var cipher = crypto.createCipher(algorithm, config.serverConfig.auth_key);
     var encipherContent = cipher.update(description, 'utf8', 'hex');
     encipherContent += cipher.final('hex');
@@ -22,7 +21,6 @@ Common.Encryption = (description, algorithm) => {
 /* EX) common.Decryption(description, 'aes-256-ctr') */
 
 Common.Decryption = (description, algorithm) => {
-
     var decipher = crypto.createDecipher(algorithm, config.serverConfig.auth_key);
     var decipherContent = decipher.update(description, 'hex', 'utf8');
     decipherContent += decipher.final('utf8');
