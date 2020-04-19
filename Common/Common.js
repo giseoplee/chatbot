@@ -30,7 +30,6 @@ Common.Decryption = (description, algorithm) => {
 /* EX) common.Hashing(description, 'ripemd160WithRSA') */
 
 Common.Hashing = (description, algorithm) => {
-
     var hash = crypto.createHash(algorithm);
     var hashedContent = hash.update(config.serverConfig.auth_key+description);
     hashedContent = hash.digest('hex');
